@@ -3,7 +3,13 @@ type ConfigType = {
     name: string;
     port: number;
     prefix: string;
+    version: string;
     host: string;
+  };
+  redis: {
+    host: string;
+    port: number;
+    password: string;
   };
   mysql: {
     type: string;
@@ -21,6 +27,7 @@ const appConfig = (): ConfigType => ({
     name: process.env.APP_NAME,
     port: parseInt(process.env.APP_PORT),
     prefix: process.env.APP_PREFIX,
+    version: process.env.APP_VERSION,
     host: process.env.APP_HOST,
   },
   mysql: {
@@ -32,6 +39,11 @@ const appConfig = (): ConfigType => ({
     database: process.env.DB,
     entities: [],
     synchronize: !!process.env.SYNCHRONIZE,
+  },
+  redis: {
+    host: process.env.RD_HOST,
+    port: parseInt(process.env.RD_PORT),
+    password: process.env.RD_PASSWORD,
   },
 });
 export default appConfig;
