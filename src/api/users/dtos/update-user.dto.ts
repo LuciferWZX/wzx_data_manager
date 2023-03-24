@@ -1,5 +1,4 @@
-export class CreateUserDto {
-  type: 'email' | 'phone';
+export class UpdateUserDto {
   email: string;
   phone: string;
   phonePrefix: string;
@@ -7,4 +6,6 @@ export class CreateUserDto {
   username: string;
   nickname: string;
   password: string;
+  firstName: string;
+  lastName: string;
 }
