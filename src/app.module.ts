@@ -10,6 +10,8 @@ import { RedisModule } from 'nestjs-redis';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 import { EmailModule } from './email/module';
+import { WsGateway } from './gateway/ws/ws.gateway';
+import { AuthModule } from './api/auth/module';
 
 // 环境变量加载
 const envFilePath = ['env/.env'];
@@ -41,6 +43,7 @@ if (process.env.NODE_ENV) {
           // entities: [__dirname + '/**/*.entity{.ts,.js}'],
           entities: [User],
           logger: 'debug',
+          logging: true,
           synchronize: synchronize,
         };
       },
@@ -94,8 +97,9 @@ if (process.env.NODE_ENV) {
     }),
     UsersModule,
     EmailModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, WsGateway],
 })
 export class AppModule {}

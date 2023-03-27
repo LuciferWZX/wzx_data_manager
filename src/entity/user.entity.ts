@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Gender } from '../type/Gender';
 import { Authority } from '../type/Authority';
+import { PlatformType } from '../type/PlatformType';
 
 @Entity({ name: 'tb_user' })
 export class User {
@@ -79,4 +80,10 @@ export class User {
     default: Authority.user,
   })
   authority: Authority;
+  @Column({
+    type: 'enum',
+    enum: PlatformType,
+    default: PlatformType.DM,
+  })
+  platform: PlatformType;
 }

@@ -1,5 +1,10 @@
 import { DataSource } from 'typeorm';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { User } from '../../entity/user.entity';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { getDM } from '../../utils/dm_number';
@@ -8,6 +13,7 @@ import { UpdateUserDto } from './dtos/update-user.dto';
 
 @Injectable()
 export class UsersService {
+  private LOGIN_EXP = 1 * 60 * 3;
   constructor(
     private dataSource: DataSource,
     private redisService: RedisService,
@@ -89,7 +95,6 @@ export class UsersService {
     }
     try {
       //验证用户的各个属性是否合理
-
       const newUser: User = await queryRunner.manager.save(User, {
         ...user,
         dm,
@@ -104,18 +109,60 @@ export class UsersService {
       await queryRunner.release(); //释放
     }
   }
-
   /**
    * 修改用户
    */
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect(); //连接
     const { verifyCode, ...restData } = updateUserDto;
     const updateProps: Partial<UpdateUserDto> = restData;
-    const res = await queryRunner.manager.update(User, { id: id }, updateProps);
+    await queryRunner.manager.update(User, { id: id }, updateProps);
+    const user = await queryRunner.manager.findOne(User, { where: { id: id } });
+    const cacheUser = await this.redisService.get(`user_${id}`);
+    //更新redis
+    if (cacheUser) {
+      await this.redisService.set(`user_${id}`, user);
+    }
     await queryRunner.release(); //释放
-    console.log(222, res);
-    return res;
+    return 'OK';
+  }
+
+  /**
+   * 密码登录
+   * @param way
+   * @param value
+   */
+  async password_login(way: string, value: string) {
+    // const failedCount = (await this.redisService.get(`${ip}_failedCount`)) ?? 0;
+    // if (failedCount >= 3) {
+    //   throw new HttpException(
+    //     '已输入密码三次错误，请三分钟后登录',
+    //     HttpStatus.BAD_REQUEST,
+    //   );
+    // }
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect(); //连接
+    const user = await queryRunner.manager.findOne(User, {
+      where: [
+        {
+          dm: way,
+        },
+        {
+          username: way,
+        },
+        {
+          email: way,
+        },
+        {
+          phone: way,
+        },
+      ],
+    });
+    await queryRunner.release();
+    if (!user) {
+      throw new UnauthorizedException('该用户不存在');
+    }
+    return user;
   }
 }

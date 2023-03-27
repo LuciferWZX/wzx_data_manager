@@ -1,3 +1,5 @@
+import * as process from 'process';
+
 const appConfig = () => ({
   app: {
     name: process.env.APP_NAME,
@@ -27,6 +29,9 @@ const appConfig = () => ({
     user: process.env.EM_TRANSPORT_AUTH_USER,
     pass: process.env.EM_TRANSPORT_AUTH_PASS,
     defaultUser: process.env.EM_DEFAULT_USER,
+  },
+  jwt: {
+    expiresTime: parseInt(process.env.JWT_EXPIRES_TIME),
   },
 });
 export default appConfig;
