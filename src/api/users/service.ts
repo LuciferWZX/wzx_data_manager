@@ -10,6 +10,7 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { getDM } from '../../utils/dm_number';
 import { RedisService } from '../../redis/redis.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { TBBan } from '../../entity/ban.entity';
 
 @Injectable()
 export class UsersService {
@@ -134,13 +135,6 @@ export class UsersService {
    * @param value
    */
   async password_login(way: string, value: string) {
-    // const failedCount = (await this.redisService.get(`${ip}_failedCount`)) ?? 0;
-    // if (failedCount >= 3) {
-    //   throw new HttpException(
-    //     '已输入密码三次错误，请三分钟后登录',
-    //     HttpStatus.BAD_REQUEST,
-    //   );
-    // }
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect(); //连接
     const user = await queryRunner.manager.findOne(User, {
@@ -159,10 +153,23 @@ export class UsersService {
         },
       ],
     });
-    await queryRunner.release();
+
     if (!user) {
+      await queryRunner.release();
       throw new UnauthorizedException('该用户不存在');
     }
+    const isBand = await queryRunner.manager.findOne(TBBan, {
+      where: {
+        uId: user.id,
+        banded: true,
+        deleted: false,
+      },
+    });
+    if (!!isBand) {
+      await queryRunner.release();
+      throw new UnauthorizedException('该用户已被封禁，请联系管理员');
+    }
+    await queryRunner.release();
     return user;
   }
 }
