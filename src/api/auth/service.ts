@@ -45,7 +45,7 @@ export class AuthService {
       auth: user.authority,
     });
     const newestUser = {
-      user,
+      id: user.id,
       ...token,
     };
     //存入redis
