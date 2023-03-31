@@ -30,7 +30,7 @@ export class AuthService {
       );
     }
     if (user.password !== password) {
-      await this.redisService.set(`${ip}_failedCount`, failedCount + 1, 5);
+      await this.redisService.set(`${ip}_failedCount`, failedCount + 1, 3 * 60);
       throw new HttpException(
         {
           message: '密码不正确',

@@ -34,9 +34,10 @@ export class AuthController {
     const ip = ipHandle(req.ip);
     return this.authService.login(req.user, ip, password);
   }
-  @HttpCode(200)
+
   @UseGuards(JwtAuthGuard)
   @Get('profile')
+  @HttpCode(200)
   async info(@Req() req: Request) {
     const { id } = req.user;
     const user = await this.redisService.get(`user_${id}`);

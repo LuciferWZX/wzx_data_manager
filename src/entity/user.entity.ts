@@ -59,7 +59,7 @@ export class User {
   phone: string;
   @Column({
     type: 'varchar',
-    length: 50,
+    length: 255,
     nullable: true,
   })
   avatar: string;
