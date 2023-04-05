@@ -6,6 +6,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { RedisService } from '../../redis/redis.service';
+import parseToken from '../../utils/parse_token';
 
 /**
  * 前端事例
@@ -30,8 +31,8 @@ export class WsGateway {
    * @param client
    */
   async handleConnection(client: Socket) {
-    const uid = client.handshake.auth['uid'];
-    await this.redisService.hSet(this.USERS_ONLINE_ALL, uid, client.id);
+    const { id: uid } = parseToken(client.handshake.auth['token']);
+    await this.redisService.hSet(this.USERS_ONLINE_ALL, String(uid), client.id);
     console.log(`与服务器链接已建立,uid:${uid}`);
   }
 
@@ -40,8 +41,8 @@ export class WsGateway {
    * @param client
    */
   async handleDisconnect(client: Socket) {
-    const uid = client.handshake.auth['uid'];
-    await this.redisService.hDel(this.USERS_ONLINE_ALL, uid);
+    const { id: uid } = parseToken(client.handshake.auth['token']);
+    await this.redisService.hDel(this.USERS_ONLINE_ALL, String(uid));
     console.log(`与服务器链接已断开,uid:${uid}`);
   }
   @SubscribeMessage('message')

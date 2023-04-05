@@ -27,6 +27,7 @@ specifiers:
   eslint-plugin-prettier: ^4.0.0
   ioredis: ^5.3.1
   jest: 29.3.1
+  jwt-decode: ^3.1.2
   mysql2: ^3.2.0
   nestjs-redis: git+https://github.com/GyanendroKh/nestjs-redis.git#nest8-fix
   passport: ^0.6.0
@@ -57,6 +58,7 @@ dependencies:
   '@nestjs/typeorm': registry.npmmirror.com/@nestjs/typeorm/9.0.1_ur47gaxxutvcxhgxsb6wlmpphe
   '@nestjs/websockets': registry.npmmirror.com/@nestjs/websockets/9.3.12_77yrfbueytbe63kr6izy56rm3u
   ioredis: registry.npmmirror.com/ioredis/5.3.1
+  jwt-decode: registry.npmmirror.com/jwt-decode/3.1.2
   mysql2: registry.npmmirror.com/mysql2/3.2.0
   nestjs-redis: github.com/GyanendroKh/nestjs-redis/0b1f99ac8ec0c7f2ae64f8cd30b32b7ad324cfaf_vvnzk3fyol34d36p5efbmosv3y
   passport: registry.npmmirror.com/passport/0.6.0
@@ -5756,6 +5758,12 @@ packages:
     dependencies:
       jwa: registry.npmmirror.com/jwa/1.4.1
       safe-buffer: registry.npmmirror.com/safe-buffer/5.2.1
+    dev: false
+
+  registry.npmmirror.com/jwt-decode/3.1.2:
+    resolution: {integrity: sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/jwt-decode/-/jwt-decode-3.1.2.tgz}
+    name: jwt-decode
+    version: 3.1.2
     dev: false
 
   registry.npmmirror.com/kleur/3.0.3:
