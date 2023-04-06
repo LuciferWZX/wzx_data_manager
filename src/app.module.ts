@@ -13,6 +13,8 @@ import { EmailModule } from './email/module';
 import { AuthModule } from './api/auth/module';
 import { WsModule } from './gateway/ws/ws.module';
 import { TBBan } from './entity/ban.entity';
+import { ContactGroup } from './entity/contact_group.entity';
+import { Contact } from './entity/contact.entity';
 
 // 环境变量加载
 const envFilePath = ['env/.env'];
@@ -42,7 +44,7 @@ if (process.env.NODE_ENV) {
           password: password,
           database: database,
           // entities: [__dirname + '/**/*.entity{.ts,.js}'],
-          entities: [User, TBBan],
+          entities: [User, TBBan, ContactGroup, Contact],
           logger: 'debug',
           logging: true,
           synchronize: synchronize,
