@@ -15,6 +15,7 @@ import { WsModule } from './gateway/ws/ws.module';
 import { TBBan } from './entity/ban.entity';
 import { ContactGroup } from './entity/contact_group.entity';
 import { Contact } from './entity/contact.entity';
+import { FriendsModule } from './api/friends/module';
 
 // 环境变量加载
 const envFilePath = ['env/.env'];
@@ -99,6 +100,7 @@ if (process.env.NODE_ENV) {
       },
     }),
     UsersModule,
+    FriendsModule,
     EmailModule,
     AuthModule,
     WsModule,
