@@ -2,6 +2,8 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  OneToOne,
   PrimaryColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -9,6 +11,7 @@ import {
 import { Gender } from '../type/Gender';
 import { Authority } from '../type/Authority';
 import { PlatformType } from '../type/PlatformType';
+import { TBBan } from './ban.entity';
 
 @Entity({ name: 'tb_user' })
 export class User {
@@ -44,6 +47,13 @@ export class User {
     unique: true,
   })
   username: string; //只能是英文
+  @Column({
+    type: 'varchar',
+    length: 50,
+    nullable: true,
+    comment: '签名描述一下自己的心情',
+  })
+  sign: string; //签名
   @Column({
     name: 'phone_prefix',
     type: 'varchar',
@@ -86,4 +96,13 @@ export class User {
     default: PlatformType.DM,
   })
   platform: PlatformType;
+  // @Column({
+  //   name: 'ban_id',
+  //   comment: '如果被ban过这边会有id号',
+  //   nullable: true,
+  // })
+  // banId: number | null;
+  @OneToOne(() => TBBan)
+  @JoinColumn()
+  ban: TBBan;
 }

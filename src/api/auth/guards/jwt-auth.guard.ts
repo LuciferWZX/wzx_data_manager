@@ -1,5 +1,10 @@
 import { AuthGuard } from '@nestjs/passport';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
   handleRequest(err, user, info) {
@@ -9,7 +14,16 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       if (info.message === 'No auth token') {
         msg = 'token不存在';
       }
-      throw err || new UnauthorizedException(msg);
+      throw (
+        err ||
+        new HttpException(
+          {
+            message: msg,
+            code: -1,
+          },
+          HttpStatus.UNAUTHORIZED,
+        )
+      );
     }
     return user;
   }

@@ -41,7 +41,6 @@ export class FriendsService {
         );
       }
     }
-
     try {
       const record = await queryRunner.manager.save(Contact, {
         uid: uid,

@@ -1,4 +1,4 @@
-import { DataSource } from 'typeorm';
+import { DataSource, ILike, Not } from 'typeorm';
 import {
   HttpException,
   HttpStatus,
@@ -127,6 +127,80 @@ export class UsersService {
     }
     await queryRunner.release(); //释放
     return 'OK';
+  }
+
+  async queryUsers(
+    id: number,
+    queryStr: string,
+  ): Promise<
+    Pick<
+      User,
+      'id' | 'dm' | 'avatar' | 'ban' | 'username' | 'phone' | 'email' | 'sign'
+    >[]
+  > {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect(); //连接
+    const users = await queryRunner.manager.find(User, {
+      where: [
+        {
+          id: Not(id),
+          dm: queryStr,
+        },
+        {
+          nickname: ILike('%' + queryStr + '%'),
+        },
+        {
+          id: Not(id),
+          username: queryStr,
+        },
+        {
+          id: Not(id),
+          phone: queryStr,
+        },
+        {
+          id: Not(id),
+          email: queryStr,
+        },
+      ],
+      relations: { ban: true },
+    });
+    await queryRunner.release(); //关闭
+    return users
+      .filter((user) => !user.ban?.deleted)
+      .map((user) => {
+        return {
+          id: user.id,
+          dm: user.dm,
+          username: user.dm,
+          ban: user.ban,
+          phone: user.phone,
+          email: user.email,
+          avatar: user.avatar,
+          sign: user.sign,
+        };
+      });
+  }
+
+  async banUser(uId: number, reason: string) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect(); //连接
+
+    const user = await queryRunner.manager.findOne(User, {
+      where: {
+        id: uId,
+      },
+    });
+    if (!user) {
+      await queryRunner.release(); //关闭
+      throw new HttpException('该用户不存在', HttpStatus.UNAUTHORIZED);
+    }
+    const ban = new TBBan();
+    ban.uId = uId;
+    ban.reason = reason;
+    await queryRunner.manager.save(ban);
+    user.ban = ban;
+    await queryRunner.manager.save(user);
+    await queryRunner.release(); //关闭
   }
 
   /**

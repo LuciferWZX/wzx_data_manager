@@ -3,19 +3,18 @@ import {
   Controller,
   Get,
   HttpCode,
-  HttpException,
-  HttpStatus,
   Param,
   Post,
   Put,
-  Request,
+  Req,
   UseGuards,
 } from '@nestjs/common';
-
+import { Request } from 'express';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './service';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { User } from '../../entity/user.entity';
 
 @Controller('users')
 export class UsersController {
@@ -41,6 +40,27 @@ export class UsersController {
   @HttpCode(200)
   update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
+  }
+  @Post('/query')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(200)
+  async query(
+    @Body() params: { queryStr: string },
+    @Req() req: Request,
+  ): Promise<
+    Pick<
+      User,
+      'id' | 'avatar' | 'ban' | 'username' | 'phone' | 'email' | 'sign' | 'dm'
+    >[]
+  > {
+    const { id } = req.user;
+    return await this.usersService.queryUsers(id, params.queryStr);
+  }
+  @Post('/ban')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(200)
+  ban(@Body() params: { uid: number; reason: string }): Promise<void> {
+    return this.usersService.banUser(params.uid, params.reason);
   }
   @Get()
   findAll(): string {
