@@ -6,40 +6,42 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Authority } from '../type/Authority';
-import { RecordStatus } from '../type/RecordStatus';
+import { DeletedStatus, RecordStatus } from '../type/RecordStatus';
 
 @Entity({ name: 'tb_contact_record' })
-export class Contact {
+export class ContactRecord {
   @PrimaryGeneratedColumn()
   id: number;
   @Column({
-    type: 'varchar',
+    type: 'int',
     nullable: false,
   })
   uid: number; //发送者id
   @Column({
-    type: 'varchar',
+    type: 'int',
     nullable: false,
   })
   fid: number; //接收者id
   @Column({
-    type: 'varchar',
+    type: 'int',
     name: 'user_group_id',
     nullable: false,
   })
   uGroupId: number; //发送者默认接收者的分组id
   @Column({
     type: 'varchar',
-    name: 'friend_group_id',
-    nullable: false,
+    length: 50,
+    name: 'sender_desc',
+    nullable: true,
   })
-  fGroupId: number; //接收者默认发送者的分组id
+  senderDesc: string; //发送者向接收者发送一条描述
   @Column({
     type: 'varchar',
-    length: 50,
+    length: 20,
     name: 'sender_remark',
+    nullable: true,
   })
-  senderRemark: string; //发送者向接收者发送一条备注
+  senderRemark: string; //发送者对接收者进行备注
   @Column({
     type: 'enum',
     enum: RecordStatus,
@@ -50,6 +52,7 @@ export class Contact {
     type: 'varchar',
     length: 50,
     name: 'reject_reason',
+    nullable: true,
   })
   rejectReason: string; //如果拒绝，拒绝的原因
   @CreateDateColumn({ name: 'create_date' })
@@ -58,8 +61,8 @@ export class Contact {
   updateDate: string;
   @Column({
     type: 'enum',
-    enum: RecordStatus,
-    default: RecordStatus.Waiting,
+    enum: DeletedStatus,
+    default: DeletedStatus.Nothing,
   })
-  deleted: RecordStatus; //当前的记录状态
+  deleted: DeletedStatus; //当前的记录状态
 }

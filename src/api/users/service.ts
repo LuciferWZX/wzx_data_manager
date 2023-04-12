@@ -11,6 +11,7 @@ import { getDM } from '../../utils/dm_number';
 import { RedisService } from '../../redis/redis.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { TBBan } from '../../entity/ban.entity';
+import { ContactGroup } from '../../entity/contact_group.entity';
 
 @Injectable()
 export class UsersService {
@@ -135,7 +136,15 @@ export class UsersService {
   ): Promise<
     Pick<
       User,
-      'id' | 'dm' | 'avatar' | 'ban' | 'username' | 'phone' | 'email' | 'sign'
+      | 'id'
+      | 'dm'
+      | 'avatar'
+      | 'ban'
+      | 'username'
+      | 'phone'
+      | 'email'
+      | 'sign'
+      | 'nickname'
     >[]
   > {
     const queryRunner = this.dataSource.createQueryRunner();
@@ -147,6 +156,7 @@ export class UsersService {
           dm: queryStr,
         },
         {
+          id: Not(id),
           nickname: ILike('%' + queryStr + '%'),
         },
         {
@@ -177,6 +187,7 @@ export class UsersService {
           email: user.email,
           avatar: user.avatar,
           sign: user.sign,
+          nickname: user.nickname,
         };
       });
   }
@@ -189,10 +200,18 @@ export class UsersService {
       where: {
         id: uId,
       },
+      relations: { ban: true },
     });
     if (!user) {
       await queryRunner.release(); //关闭
       throw new HttpException('该用户不存在', HttpStatus.UNAUTHORIZED);
+    }
+    if (user.ban?.banded && !user.ban?.deleted) {
+      await queryRunner.release(); //关闭
+      throw new HttpException(
+        '该用户已经被封禁，无法再次封禁',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
     const ban = new TBBan();
     ban.uId = uId;
@@ -201,6 +220,23 @@ export class UsersService {
     user.ban = ban;
     await queryRunner.manager.save(user);
     await queryRunner.release(); //关闭
+  }
+
+  async availableGroup(uid: number) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect(); //连接
+    const groups = queryRunner.manager.find(ContactGroup, {
+      where: [
+        {
+          creator: uid,
+        },
+        {
+          creator: -1,
+        },
+      ],
+    });
+    await queryRunner.release();
+    return groups;
   }
 
   /**

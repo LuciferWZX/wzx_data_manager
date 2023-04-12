@@ -11,7 +11,7 @@ export class ContactGroup {
   @PrimaryGeneratedColumn()
   id: number;
   @Column({
-    type: 'varchar',
+    type: 'int',
     nullable: false,
   })
   creator: number;

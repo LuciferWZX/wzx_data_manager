@@ -1,17 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateFriendsRequestDto } from './dtos/create-friends-request.dto';
-import { DataSource, Not } from 'typeorm';
-import { Contact } from '../../entity/contact_request_records.entity';
-import { RecordStatus } from '../../type/RecordStatus';
+import { Any, DataSource, In, Not } from 'typeorm';
+import { ContactRecord } from '../../entity/contact_request_records.entity';
+import { DeletedStatus, RecordStatus } from '../../type/RecordStatus';
 
 @Injectable()
 export class FriendsService {
   constructor(private dataSource: DataSource) {}
-  async create(createFriendsRequestDto: CreateFriendsRequestDto) {
-    const { uid, fid, uGroupId, senderRemark } = createFriendsRequestDto;
+  async create(uid: number, createFriendsRequestDto: CreateFriendsRequestDto) {
+    const { fid, uGroupId, senderRemark, senderDesc } = createFriendsRequestDto;
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
-    const existRecord = await queryRunner.manager.findOne(Contact, {
+    const existRecord = await queryRunner.manager.findOne(ContactRecord, {
       where: [
         {
           uid: uid,
@@ -25,6 +25,7 @@ export class FriendsService {
         },
       ],
     });
+
     if (existRecord) {
       if (existRecord.status === RecordStatus.Accept) {
         await queryRunner.release();
@@ -42,11 +43,12 @@ export class FriendsService {
       }
     }
     try {
-      const record = await queryRunner.manager.save(Contact, {
+      const record = await queryRunner.manager.save(ContactRecord, {
         uid: uid,
         fid: fid,
         uGroupId: uGroupId,
         senderRemark: senderRemark,
+        senderDesc: senderDesc,
       });
       return {
         id: record.id,
@@ -56,5 +58,32 @@ export class FriendsService {
     } finally {
       await queryRunner.release();
     }
+  }
+
+  async getRecords(uid: number) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    const records = await queryRunner.manager.find(ContactRecord, {
+      where: [
+        {
+          uid: uid,
+          deleted: DeletedStatus.Nothing,
+        },
+        // {
+        //   uid: uid,
+        //   deleted: DeletedStatus.FriendDeleted,
+        // },
+        // {
+        //   fid: uid,
+        //   deleted: DeletedStatus.Nothing,
+        // },
+        // {
+        //   fid: uid,
+        //   deleted: DeletedStatus.UserDeleted,
+        // },
+      ],
+    });
+    await queryRunner.release();
+    return records;
   }
 }

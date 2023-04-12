@@ -15,7 +15,7 @@ export class TBBan {
   @PrimaryGeneratedColumn()
   id: number;
   @Column({
-    type: 'varchar',
+    type: 'int',
     nullable: false,
   })
   uId: number;

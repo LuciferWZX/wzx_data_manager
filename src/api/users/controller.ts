@@ -56,6 +56,13 @@ export class UsersController {
     const { id } = req.user;
     return await this.usersService.queryUsers(id, params.queryStr);
   }
+  @Get('/contact-groups')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(200)
+  async getGroup(@Req() req: Request) {
+    const { id } = req.user;
+    return this.usersService.availableGroup(id);
+  }
   @Post('/ban')
   @UseGuards(JwtAuthGuard)
   @HttpCode(200)
