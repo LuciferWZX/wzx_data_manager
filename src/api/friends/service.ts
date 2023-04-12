@@ -63,24 +63,17 @@ export class FriendsService {
   async getRecords(uid: number) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
+
     const records = await queryRunner.manager.find(ContactRecord, {
       where: [
         {
           uid: uid,
-          deleted: DeletedStatus.Nothing,
+          deleted: In([DeletedStatus.Nothing, DeletedStatus.FriendDeleted]),
         },
-        // {
-        //   uid: uid,
-        //   deleted: DeletedStatus.FriendDeleted,
-        // },
-        // {
-        //   fid: uid,
-        //   deleted: DeletedStatus.Nothing,
-        // },
-        // {
-        //   fid: uid,
-        //   deleted: DeletedStatus.UserDeleted,
-        // },
+        {
+          fid: uid,
+          deleted: In([DeletedStatus.Nothing, DeletedStatus.UserDeleted]),
+        },
       ],
     });
     await queryRunner.release();

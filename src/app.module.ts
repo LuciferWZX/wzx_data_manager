@@ -47,7 +47,6 @@ if (process.env.NODE_ENV) {
           database: database,
           // entities: [__dirname + '/**/*.entity{.ts,.js}'],
           entities: [User, TBBan, ContactGroup, Contact, ContactRecord],
-          logger: 'debug',
           logging: true,
           synchronize: synchronize,
         };
