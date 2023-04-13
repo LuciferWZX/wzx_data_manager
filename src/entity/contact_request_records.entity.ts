@@ -2,11 +2,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Authority } from '../type/Authority';
 import { DeletedStatus, RecordStatus } from '../type/RecordStatus';
+import { UserBasicProfile } from './user_basic_profile';
+import { User } from './user.entity';
 
 @Entity({ name: 'tb_contact_record' })
 export class ContactRecord {
@@ -17,11 +20,17 @@ export class ContactRecord {
     nullable: false,
   })
   uid: number; //发送者id
+  @OneToOne(() => User)
+  @JoinColumn()
+  sProfile: UserBasicProfile;
   @Column({
     type: 'int',
     nullable: false,
   })
   fid: number; //接收者id
+  @OneToOne(() => User)
+  @JoinColumn()
+  rProfile: UserBasicProfile;
   @Column({
     type: 'int',
     name: 'user_group_id',

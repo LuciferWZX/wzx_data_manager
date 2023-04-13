@@ -262,6 +262,20 @@ export class UsersService {
           phone: way,
         },
       ],
+      select: [
+        'id',
+        'email',
+        'gender',
+        'avatar',
+        'nickname',
+        'password',
+        'username',
+        'firstName',
+        'phonePrefix',
+        'phone',
+        'lastName',
+        'platform',
+      ],
     });
 
     if (!user) {

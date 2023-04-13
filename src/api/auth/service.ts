@@ -29,6 +29,7 @@ export class AuthService {
         HttpStatus.UNAUTHORIZED,
       );
     }
+    console.log(1111, user);
     if (user.password !== password) {
       await this.redisService.set(`${ip}_failedCount`, failedCount + 1, 3 * 60);
       throw new HttpException(

@@ -33,6 +33,7 @@ export class WsGateway {
   async handleConnection(client: Socket) {
     const { id: uid } = parseToken(client.handshake.auth['token']);
     await this.redisService.hSet(this.USERS_ONLINE_ALL, String(uid), client.id);
+    client.join(uid.toString());
     console.log(`与服务器链接已建立,uid:${uid}`);
   }
 
@@ -51,5 +52,19 @@ export class WsGateway {
     // 发送网页的数据给flutter端
     // client.emit('toflutter', payload.message)
     this.server.emit('toflutter', payload.message);
+  }
+
+  @SubscribeMessage('handle-friends-request')
+  handleFriendsRequest(
+    client: any,
+    payload: {
+      rId: number;
+      data: any;
+    },
+  ) {
+    console.log(payload);
+    const { rId, data } = payload;
+    console.log(111111111, payload);
+    this.server.to(rId.toString()).emit('update-friends-records', data);
   }
 }

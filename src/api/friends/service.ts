@@ -3,10 +3,12 @@ import { CreateFriendsRequestDto } from './dtos/create-friends-request.dto';
 import { Any, DataSource, In, Not } from 'typeorm';
 import { ContactRecord } from '../../entity/contact_request_records.entity';
 import { DeletedStatus, RecordStatus } from '../../type/RecordStatus';
+import { User } from '../../entity/user.entity';
+import { WsGateway } from '../../gateway/ws/ws.gateway';
 
 @Injectable()
 export class FriendsService {
-  constructor(private dataSource: DataSource) {}
+  constructor(private dataSource: DataSource, private wsGateway: WsGateway) {}
   async create(uid: number, createFriendsRequestDto: CreateFriendsRequestDto) {
     const { fid, uGroupId, senderRemark, senderDesc } = createFriendsRequestDto;
     const queryRunner = this.dataSource.createQueryRunner();
@@ -43,17 +45,39 @@ export class FriendsService {
       }
     }
     try {
+      const sUser = await queryRunner.manager.findOne(User, {
+        where: [
+          {
+            id: uid,
+          },
+        ],
+      });
+      const rUser = await queryRunner.manager.findOne(User, {
+        where: [
+          {
+            id: fid,
+          },
+        ],
+      });
       const record = await queryRunner.manager.save(ContactRecord, {
         uid: uid,
         fid: fid,
         uGroupId: uGroupId,
         senderRemark: senderRemark,
         senderDesc: senderDesc,
+        sProfile: sUser,
+        rProfile: rUser,
       });
+      console.log('aaaaaa', record);
+      //请求好友成功，数据库通知，插入一条【好友请求】类型的通知这时候发送socket通知
+      this.wsGateway.server
+        .to(rUser.id.toString())
+        .emit('update-friends-records', record);
       return {
         id: record.id,
       };
     } catch (err) {
+      console.log('[出错：]', err);
       throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
     } finally {
       await queryRunner.release();
@@ -75,6 +99,10 @@ export class FriendsService {
           deleted: In([DeletedStatus.Nothing, DeletedStatus.UserDeleted]),
         },
       ],
+      relations: {
+        sProfile: true,
+        rProfile: true,
+      },
     });
     await queryRunner.release();
     return records;
