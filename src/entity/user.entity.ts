@@ -17,7 +17,11 @@ import { TBBan } from './ban.entity';
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
-  @PrimaryColumn('varchar', { length: 15 })
+  @Column('varchar', {
+    length: 15,
+    unique:true,
+    nullable:false
+  })
   dm: string;
   @Column({
     type: 'enum',

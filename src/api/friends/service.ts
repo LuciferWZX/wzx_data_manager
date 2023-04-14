@@ -68,7 +68,6 @@ export class FriendsService {
         sProfile: sUser,
         rProfile: rUser,
       });
-      console.log('aaaaaa', record);
       //请求好友成功，数据库通知，插入一条【好友请求】类型的通知这时候发送socket通知
       this.wsGateway.server
         .to(rUser.id.toString())

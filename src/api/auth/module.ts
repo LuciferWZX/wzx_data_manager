@@ -14,7 +14,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     PassportModule.register({ session: true }),
     JwtModule.register({
       secret: 'wxy', // 设置私钥
-      signOptions: { expiresIn: '24h' }, // 过期时间
+      // signOptions: { expiresIn: '24h' }, // 过期时间
     }),
   ],
   controllers: [AuthController],
