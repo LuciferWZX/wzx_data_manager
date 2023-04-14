@@ -2,11 +2,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn, ManyToOne,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn
-} from "typeorm";
+  UpdateDateColumn,
+} from 'typeorm';
 import { DeletedStatus, RecordStatus } from '../type/RecordStatus';
 import { UserBasicProfile } from './user_basic_profile';
 import { User } from './user.entity';
