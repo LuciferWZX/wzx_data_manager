@@ -2,32 +2,39 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { User } from './user.entity';
+import { UserBasicProfile } from './user_basic_profile';
 
 @Entity({ name: 'tb_contact' })
 export class Contact {
   @PrimaryGeneratedColumn()
   id: number;
   @Column({
-    type: 'varchar',
+    type: 'int',
     nullable: false,
   })
   uid: number;
+  @ManyToOne(() => User)
+  uProfile: User;
   @Column({
-    type: 'varchar',
+    type: 'int',
     nullable: false,
   })
   fid: number;
+  @ManyToOne(() => User)
+  fProfile: User;
   @Column({
-    type: 'varchar',
+    type: 'int',
     name: 'user_group_id',
     nullable: false,
   })
   uGroupId: number;
   @Column({
-    type: 'varchar',
+    type: 'int',
     name: 'friend_group_id',
     nullable: false,
   })
