@@ -6,9 +6,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Gender } from '../type/Gender';
-import { Authority } from '../type/Authority';
-import { PlatformType } from '../type/PlatformType';
 
 @Entity({ name: 'tb_user_ban' })
 export class TBBan {

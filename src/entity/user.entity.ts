@@ -19,8 +19,8 @@ export class User {
   id: number;
   @Column('varchar', {
     length: 15,
-    unique:true,
-    nullable:false
+    unique: true,
+    nullable: false,
   })
   dm: string;
   @Column({

@@ -17,6 +17,7 @@ import { ContactGroup } from './entity/contact_group.entity';
 import { Contact } from './entity/contact.entity';
 import { FriendsModule } from './api/friends/module';
 import { ContactRecord } from './entity/contact_request_records.entity';
+import { Group } from './entity/group.entity';
 
 // 环境变量加载
 const envFilePath = ['env/.env'];
@@ -46,7 +47,7 @@ if (process.env.NODE_ENV) {
           password: password,
           database: database,
           // entities: [__dirname + '/**/*.entity{.ts,.js}'],
-          entities: [User, TBBan, ContactGroup, Contact, ContactRecord],
+          entities: [User, TBBan, ContactGroup, Contact, ContactRecord, Group],
           loggerLevel: 'debug',
           logging: false,
           synchronize: synchronize,

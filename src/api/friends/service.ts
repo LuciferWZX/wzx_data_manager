@@ -226,13 +226,17 @@ export class FriendsService {
     const uContacts = await queryRunner.manager.find(Contact, {
       where: { uid: uid },
       relations: {
-        fProfile: true,
+        fProfile: {
+          ban: true,
+        },
       },
     });
     const fContacts = await queryRunner.manager.find(Contact, {
       where: { fid: uid },
       relations: {
-        uProfile: true,
+        uProfile: {
+          ban: true,
+        },
       },
     });
     await queryRunner.release();
