@@ -39,6 +39,12 @@ export class Group {
     comment: '该群的描述',
   })
   desc: string;
+  @Column({
+    type: 'varchar',
+    length: 255,
+    comment: '群公告',
+  })
+  announcement: string;
   @CreateDateColumn({ name: 'create_date' })
   createDate: string;
   @UpdateDateColumn({ name: 'update_date' })

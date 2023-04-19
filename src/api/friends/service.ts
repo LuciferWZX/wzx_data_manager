@@ -74,7 +74,19 @@ export class FriendsService {
       //请求好友成功，数据库通知，插入一条【好友请求】类型的通知这时候发送socket通知
       this.wsGateway.server
         .to(rUser.id.toString())
-        .emit('update-friends-records', record);
+        .emit('update-friends-records', {
+          id: record.id,
+          fid: record.uid,
+          creatorId: record.uid,
+          groupId: 1, //默认好友
+          senderDesc: record.senderDesc,
+          senderRemark: record.senderRemark,
+          status: record.status,
+          rejectReason: record.rejectReason,
+          createDate: record.createDate,
+          deleted: record.deleted,
+          friendInfo: record.sProfile,
+        });
       return {
         id: record.id,
       };

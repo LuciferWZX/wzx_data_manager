@@ -18,6 +18,9 @@ import { Contact } from './entity/contact.entity';
 import { FriendsModule } from './api/friends/module';
 import { ContactRecord } from './entity/contact_request_records.entity';
 import { Group } from './entity/group.entity';
+import { Message } from './entity/message.entity';
+import { GroupMessage } from './entity/group_message.entity';
+import { SystemMessage } from './entity/system_message.entity';
 
 // 环境变量加载
 const envFilePath = ['env/.env'];
@@ -47,7 +50,17 @@ if (process.env.NODE_ENV) {
           password: password,
           database: database,
           // entities: [__dirname + '/**/*.entity{.ts,.js}'],
-          entities: [User, TBBan, ContactGroup, Contact, ContactRecord, Group],
+          entities: [
+            User,
+            TBBan,
+            ContactGroup,
+            Contact,
+            ContactRecord,
+            Group,
+            Message,
+            GroupMessage,
+            SystemMessage,
+          ],
           loggerLevel: 'debug',
           logging: false,
           synchronize: synchronize,
