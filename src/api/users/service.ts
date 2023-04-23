@@ -191,7 +191,17 @@ export class UsersService {
         };
       });
   }
-
+  async queryFriendInfo(fid: number) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect(); //连接
+    const friendInfo = await queryRunner.manager.findOne(User, {
+      where: {
+        id: fid,
+      },
+    });
+    await queryRunner.release();
+    return friendInfo;
+  }
   async banUser(uId: number, reason: string) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect(); //连接

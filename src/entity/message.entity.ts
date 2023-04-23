@@ -51,4 +51,10 @@ export class Message {
   updateDate: string;
   @DeleteDateColumn({ name: 'deleted_time', comment: '删除时间' })
   deletedDate: string;
+  @Column({
+    type: 'boolean',
+    default: false,
+    comment: '对方是否已读',
+  })
+  read: boolean;
 }

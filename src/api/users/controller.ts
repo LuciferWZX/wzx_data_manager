@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -55,6 +56,12 @@ export class UsersController {
   > {
     const { id } = req.user;
     return await this.usersService.queryUsers(id, params.queryStr);
+  }
+  @Get('/friend-info')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(200)
+  async queryFriendInfo(@Query('fid') fid: number, s): Promise<User> {
+    return await this.usersService.queryFriendInfo(fid);
   }
   @Get('/contact-groups')
   @UseGuards(JwtAuthGuard)
