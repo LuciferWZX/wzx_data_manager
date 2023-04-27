@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { DataSource, LessThan, MoreThan } from 'typeorm';
 import { WsGateway } from '../../gateway/ws/ws.gateway';
 import { MessageType } from '../../type/message/MessageType';
 import { Message } from '../../entity/message.entity';
@@ -39,6 +39,7 @@ export class MessageService {
     config?: {
       pageSize: number;
       page: number;
+      currentTime: string;
     },
   ) {
     const queryRunner = this.dataSource.createQueryRunner();
@@ -50,12 +51,14 @@ export class MessageService {
           receiverId: fid,
           senderDeleted: false,
           deletedDate: null,
+          createDate: LessThan(config.currentTime),
         },
         {
           senderId: fid,
           receiverId: uid,
           receiverDeleted: false,
           deletedDate: null,
+          createDate: LessThan(config.currentTime),
         },
       ],
       order: {
@@ -74,12 +77,14 @@ export class MessageService {
           receiverId: fid,
           senderDeleted: false,
           deletedDate: null,
+          createDate: LessThan(config.currentTime),
         },
         {
           senderId: fid,
           receiverId: uid,
           receiverDeleted: false,
           deletedDate: null,
+          createDate: LessThan(config.currentTime),
         },
       ],
     });

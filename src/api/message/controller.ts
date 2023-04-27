@@ -41,11 +41,13 @@ export class MessageController {
     @Query('fid') fid: number,
     @Query('pageSize') pageSize: number,
     @Query('page') page: number,
+    @Query('currentTime') currentTime: string,
   ) {
     const { id } = req.user;
     return this.messageService.queryMessage(id, fid, {
       page: page,
       pageSize: pageSize,
+      currentTime: currentTime,
     });
   }
 }
