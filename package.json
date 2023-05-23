@@ -34,13 +34,15 @@
     "jwt-decode": "^3.1.2",
     "mysql2": "^3.2.0",
     "nestjs-redis": "git+https://github.com/GyanendroKh/nestjs-redis.git#nest8-fix",
+    "openai": "^3.2.1",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
     "socket.io": "^4.6.1",
-    "typeorm": "^0.3.12"
+    "typeorm": "^0.3.12",
+    "umi-request": "^1.4.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",

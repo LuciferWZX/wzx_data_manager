@@ -22,6 +22,7 @@ import { Message } from './entity/message.entity';
 import { GroupMessage } from './entity/group_message.entity';
 import { SystemMessage } from './entity/system_message.entity';
 import { MessageModule } from './api/message/module';
+import { GPTModule } from './api/gpt/module';
 
 // 环境变量加载
 const envFilePath = ['env/.env'];
@@ -121,6 +122,7 @@ if (process.env.NODE_ENV) {
     EmailModule,
     AuthModule,
     WsModule,
+    GPTModule,
   ],
   controllers: [AppController],
   providers: [AppService],
