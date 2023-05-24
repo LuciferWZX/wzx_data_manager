@@ -1,5 +1,6 @@
-import { Controller, Get, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { GPTService } from './service';
+import { GPTMessage } from './chat_types';
 
 @Controller('gpt')
 export class GPTController {
@@ -18,5 +19,12 @@ export class GPTController {
   @HttpCode(200)
   async createCompletion() {
     return this.gptService.createCompletion();
+  }
+  @Post('/chat')
+  @HttpCode(200)
+  async createChatCompletion(@Body() params: { question: GPTMessage }) {
+    const { question } = params;
+    console.log('收到:', params);
+    return this.gptService.createChatCompletion({ question });
   }
 }

@@ -15,7 +15,7 @@ const request = extend({
 });
 request.interceptors.request.use((url, options) => {
   const header: any = options.headers;
-  const token = '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';
+  const token = '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';
   header.Authorization = `Bearer ${token}`;
 
   return {

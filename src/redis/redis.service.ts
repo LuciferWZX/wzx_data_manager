@@ -72,7 +72,7 @@ export class RedisService {
       await this.client.hset(key, field, value, 'EX', seconds);
     }
   }
-  public async hGet(key: string, field: string) {
+  public async hGet<T>(key: string, field: string): Promise<T> {
     if (!this.client) {
       await this.getClient();
     }
