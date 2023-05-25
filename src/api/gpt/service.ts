@@ -6,7 +6,7 @@ import { RedisService } from '../../redis/redis.service';
 
 @Injectable()
 export class GPTService {
-  apiKey = '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';
+  apiKey = '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';
   organization = 'org-fJ8q1BgXk1kL3zEC3F1CPT1M';
   openAI: OpenAIApi;
 
@@ -38,7 +38,7 @@ export class GPTService {
       },
     });
   }
-  async createChatCompletion(params: { question: GPTMessage }) {
+  async createChatCompletion(params: { question: GPTMessage; id: string }) {
     let cache = await this.redisService.hGet<GTPChatType>('chat', 'test_id');
     if (cache) {
       cache.messages.push(params.question);
@@ -56,8 +56,10 @@ export class GPTService {
         data: cache,
       },
     );
+    console.log('GPT返回:', res.choices[0].message);
     return {
-      id: res.id,
+      gid: res.id,
+      id: params.id,
       created: res.created,
       message: res.choices?.[0].message,
     };

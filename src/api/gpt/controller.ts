@@ -22,9 +22,11 @@ export class GPTController {
   }
   @Post('/chat')
   @HttpCode(200)
-  async createChatCompletion(@Body() params: { question: GPTMessage }) {
-    const { question } = params;
-    console.log('收到:', params);
-    return this.gptService.createChatCompletion({ question });
+  async createChatCompletion(
+    @Body() params: { question: GPTMessage; id: string },
+  ) {
+    const { question, id } = params;
+
+    return this.gptService.createChatCompletion({ question, id });
   }
 }
