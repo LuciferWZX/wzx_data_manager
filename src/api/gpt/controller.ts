@@ -1,7 +1,6 @@
 import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { GPTService } from './service';
 import { GPTMessage } from './chat_types';
-
 @Controller('gpt')
 export class GPTController {
   constructor(private gptService: GPTService) {}
@@ -28,5 +27,10 @@ export class GPTController {
     const { question, id } = params;
 
     return this.gptService.createChatCompletion({ question, id });
+  }
+  @Post('/images')
+  @HttpCode(200)
+  async createImages(@Body() params: { message: string; id: string }) {
+    return this.gptService.imageGenerations(params);
   }
 }

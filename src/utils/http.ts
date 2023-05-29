@@ -1,6 +1,7 @@
 import { extend, ResponseError } from 'umi-request';
 
 const errorHandler = (err: ResponseError) => {
+  console.log('出错：', err);
   if (err?.data) {
     console.log('error', err.data);
     return err.data;
@@ -15,7 +16,7 @@ const request = extend({
 });
 request.interceptors.request.use((url, options) => {
   const header: any = options.headers;
-  const token = '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';
+  const token = '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';
   header.Authorization = `Bearer ${token}`;
 
   return {
