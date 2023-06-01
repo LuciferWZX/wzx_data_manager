@@ -13,7 +13,7 @@ import { GTPImageResType } from './image_types';
 
 @Injectable()
 export class GPTService {
-  apiKey = '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';
+  apiKey = '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';
   organization = 'org-fJ8q1BgXk1kL3zEC3F1CPT1M';
   openAI: OpenAIApi;
 
